@@ -1,0 +1,9 @@
+[submodule "lib/Arduino-PS2X-ESP32-Makerbot"]
+	path = lib/Arduino-PS2X-ESP32-Makerbot
+	url = https://github.com/makerviet/Arduino-PS2X-ESP32-Makerbot
+[submodule "lib/Adafruit-PWM-Servo-Driver-Library"]
+	path = lib/Adafruit-PWM-Servo-Driver-Library
+	url = https://github.com/adafruit/Adafruit-PWM-Servo-Driver-Library
+[submodule "lib/Adafruit_BusIO"]
+	path = lib/Adafruit_BusIO
+	url = https://github.com/adafruit/Adafruit_BusIO.git

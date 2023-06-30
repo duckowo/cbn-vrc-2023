@@ -1,7 +1,12 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include <Adafruit_PWMServoDriver.h>
-#include <config.h>
+
+#define OSICILLATOR_FREQUENCY 27000000
+#define PWM_FREQUENCY 60
+#define I2C_COM_CLOCK 400000
+
+#define MAX_PWM_VAL 4095
 
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 
@@ -27,9 +32,42 @@ void control_servo(int pin, int val)
   pwm.setPWM(pin, 0, val);
 }
 
-void control_moving_motors(int nJoyX, int nJoyY)
+void control_moving_motors(int motL1, int motL2, int motR1, int motR2, int nJoyX, int nJoyY)
 {
-  // TODO: Add algorithm to calculate speed for each motors
+  // Based on IgorF2's Arduino Bot: https://www.instructables.com/Arduino-Robot-With-PS2-Controller-PlayStation-2-Jo/
+
+  nJoyX = map(nJoyX, 0, 255, -1023, 1023);
+  nJoyY = map(nJoyY, 0, 255, 1023, -1023);
+
+  double nMotPremixL;
+  double nMotPremixR;
+
+  if (nJoyY >= 0)
+  {
+    nMotPremixL = (nJoyX >= 0) ? 1023.0 : (1023.0 + nJoyX);
+    nMotPremixR = (nJoyX >= 0) ? (1023.0 - nJoyX) : 1023.0;
+  }
+  else
+  {
+    nMotPremixL = (nJoyX >= 0) ? (1023.0 + nJoyX) : 1023.0;
+    nMotPremixR = (nJoyX >= 0) ? 1023.0 : (1023.0 - nJoyX);
+  }
+
+  nMotPremixL = nMotPremixL * nJoyY / 1023.0;
+  nMotPremixR = nMotPremixR * nJoyY / 1023.0;
+
+  double fPivScale = (abs(nJoyY) > 1023.0) ? 0.0 : (1.0 - abs(nJoyY) / 1023.0);
+
+  int nMotMixL = (1.0 - fPivScale) * nMotPremixL + fPivScale * (+nJoyX);
+  int nMotMixR = (1.0 - fPivScale) * nMotPremixR + fPivScale * (-nJoyX);
+
+  Serial.print(nMotMixL);
+  Serial.print(" ");
+  Serial.print(nMotMixR);
+  Serial.println("");
+
+  control_motor(motL1, motL2, nMotMixL);
+  control_motor(motR1, motR2, nMotMixR);
 }
 
 void setup_pwm()

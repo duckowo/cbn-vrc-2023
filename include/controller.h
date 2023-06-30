@@ -1,6 +1,12 @@
 #include <Arduino.h>
 #include <PS2X_lib.h>
-#include <config.h>
+
+#define PS2_DAT 12
+#define PS2_CMD 13
+#define PS2_SEL 15
+#define PS2_CLK 14
+#define pressures false
+#define rumble false
 
 PS2X ps2x = PS2X();
 

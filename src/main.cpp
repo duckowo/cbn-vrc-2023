@@ -1,11 +1,24 @@
 #include <Arduino.h>
 #include <motors.h>
 #include <controller.h>
-#include <config.h>
+
+#define MOT_L_P1 8
+#define MOT_L_P2 9
+
+#define MOT_R_P1 10
+#define MOT_R_P2 11
+
+#define BALL_LAUNCHER_P1 14
+#define BALL_LAUNCHER_P2 15
+
+#define BALL_COLLECTOR_P1 12
+#define BALL_COLLECTOR_P2 13
+
+#define BALL_CONTROLLER_1 6
+#define BALL_CONTROLLER_2 7
 
 void setup()
 {
-  // put your setup code here, to run once:
   Serial.begin(115200);
   Serial.println("Hello world!!!");
 
@@ -25,10 +38,10 @@ void loop()
   control_servo(BALL_CONTROLLER_1, ps2x.Button(PSB_R1) ? 440 : 0);
   control_servo(BALL_CONTROLLER_2, ps2x.Button(PSB_R1) ? 440 : 0);
 
-  int joyX = ps2x.Analog(PSS_RX) - DEFAULT_X_VAL;
-  int joyY = ps2x.Analog(PSS_RY) - DEFAULT_Y_VAL;
+  int joyX = ps2x.Analog(PSS_RX);
+  int joyY = ps2x.Analog(PSS_RY);
 
-  control_moving_motors(joyX, joyY);
+  control_moving_motors(MOT_L_P1, MOT_L_P2, MOT_R_P1, MOT_R_P2, joyX, joyY);
 
   delay(50);
 }
