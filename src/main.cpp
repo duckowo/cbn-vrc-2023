@@ -20,8 +20,7 @@
 void setup()
 {
   Serial.begin(115200);
-  Serial.println("Hello world!!!");
-
+  
   setup_pwm();
   setup_controller();
 
