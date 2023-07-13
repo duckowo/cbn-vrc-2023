@@ -34,6 +34,7 @@ void control_servo(int pin, int val)
 
 void control_moving_motors(int motL1, int motL2, int motR1, int motR2, int nJoyX, int nJoyY)
 {
+  // TODO: Fix wrong direction when moving backward
   // Based on IgorF2's Arduino Bot: https://www.instructables.com/Arduino-Robot-With-PS2-Controller-PlayStation-2-Jo/
 
   nJoyX = map(nJoyX, 0, 255, -1023, 1023);

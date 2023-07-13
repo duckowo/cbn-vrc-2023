@@ -34,10 +34,12 @@ void loop()
   control_motor(BALL_COLLECTOR_P1, BALL_COLLECTOR_P2, (ps2x.Button(PSB_L1) ? +MAX_PWM_VAL : (ps2x.Button(PSB_L2) ? -MAX_PWM_VAL : 0)));
   control_motor(BALL_LAUNCHER_P1, BALL_LAUNCHER_P2, (ps2x.Button(PSB_R1) ? MAX_PWM_VAL : 0));
 
+  // TODO: Makes servo functional (BALL_CONTROLLER_1 and BALL_CONTROLLER_2)
+
   int joyX = ps2x.Analog(PSS_RX);
   int joyY = ps2x.Analog(PSS_RY);
 
   control_moving_motors(MOT_L_P1, MOT_L_P2, MOT_R_P1, MOT_R_P2, joyX, joyY);
 
-  delay(50);
+  delay(50); // ? Maybe no more delay in the future
 }
