@@ -39,35 +39,33 @@ void control_moving_motors(int motL1, int motL2, int motR1, int motR2, int nJoyX
   nJoyX = map(nJoyX, 0, 255, -1023, 1023);
   nJoyY = map(nJoyY, 0, 255, 1023, -1023);
 
-  double nMotPremixL;
-  double nMotPremixR;
+  int num = 1;
 
-  if (nJoyY >= 0)
+  if (nJoyY < 0)
   {
-    nMotPremixL = (nJoyX >= 0) ? 1023.0 : (1023.0 + nJoyX);
-    nMotPremixR = (nJoyX >= 0) ? (1023.0 - nJoyX) : 1023.0;
-  }
-  else
-  {
-    nMotPremixL = (nJoyX >= 0) ? (1023.0 + nJoyX) : 1023.0;
-    nMotPremixR = (nJoyX >= 0) ? 1023.0 : (1023.0 - nJoyX);
+    nJoyY = -nJoyY;
+    nJoyX = -nJoyX;
+    num = -num;
   }
 
-  nMotPremixL = nMotPremixL * nJoyY / 1023.0;
-  nMotPremixR = nMotPremixR * nJoyY / 1023.0;
+  double nMotL = (nJoyX >= 0) ? 1023.0 : (1023.0 + nJoyX);
+  double nMotR = (nJoyX >= 0) ? (1023.0 - nJoyX) : 1023.0;
 
-  double fPivScale = (abs(nJoyY) > 1023.0) ? 0.0 : (1.0 - abs(nJoyY) / 1023.0);
+  nMotL = nMotL * nJoyY / 1023.0;
+  nMotR = nMotR * nJoyY / 1023.0;
 
-  int nMotMixL = (1.0 - fPivScale) * nMotPremixL + fPivScale * (+nJoyX);
-  int nMotMixR = (1.0 - fPivScale) * nMotPremixR + fPivScale * (-nJoyX);
+  double fPivScale = 1.0 - abs(nJoyY) / 1023.0;
 
-  Serial.print(nMotMixL);
+  nMotL = (1.0 - fPivScale) * nMotL + fPivScale * (+nJoyX);
+  nMotR = (1.0 - fPivScale) * nMotR + fPivScale * (-nJoyX);
+
+  Serial.print(nMotL);
   Serial.print(" ");
-  Serial.print(nMotMixR);
+  Serial.print(nMotR);
   Serial.println("");
 
-  control_motor(motL1, motL2, nMotMixL);
-  control_motor(motR1, motR2, nMotMixR);
+  control_motor(motL1, motL2, nMotL * num);
+  control_motor(motR1, motR2, nMotR * num);
 }
 
 void setup_pwm()

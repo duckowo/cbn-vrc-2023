@@ -20,7 +20,7 @@
 void setup()
 {
   Serial.begin(115200);
-  
+
   setup_pwm();
   setup_controller();
 
@@ -31,11 +31,8 @@ void loop()
 {
   ps2x.read_gamepad(false, false);
 
-  control_motor(BALL_COLLECTOR_P1, BALL_COLLECTOR_P2, ps2x.Button(PSB_L2) ? MAX_PWM_VAL : 0);
-  control_motor(BALL_LAUNCHER_P1, BALL_LAUNCHER_P2, ps2x.Button(PSB_L1) ? MAX_PWM_VAL : 0);
-
-  control_servo(BALL_CONTROLLER_1, ps2x.Button(PSB_R1) ? 440 : 0);
-  control_servo(BALL_CONTROLLER_2, ps2x.Button(PSB_R1) ? 440 : 0);
+  control_motor(BALL_COLLECTOR_P1, BALL_COLLECTOR_P2, (ps2x.Button(PSB_L1) ? +MAX_PWM_VAL : (ps2x.Button(PSB_L2) ? -MAX_PWM_VAL : 0)));
+  control_motor(BALL_LAUNCHER_P1, BALL_LAUNCHER_P2, (ps2x.Button(PSB_R1) ? MAX_PWM_VAL : 0));
 
   int joyX = ps2x.Analog(PSS_RX);
   int joyY = ps2x.Analog(PSS_RY);
